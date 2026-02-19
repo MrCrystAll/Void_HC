@@ -1,0 +1,4 @@
+rlbot>2.0.0b
+numpy
+rlgym[all]>2
+rlgym-tools>2
