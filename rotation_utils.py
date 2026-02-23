@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def euler_to_rotation(pitch, yaw, roll):
     cp, cy, cr = np.cos((pitch, yaw, roll))
     sp, sy, sr = np.sin((pitch, yaw, roll))
@@ -20,5 +21,5 @@ def euler_to_rotation(pitch, yaw, roll):
     theta[0, 2] = -cr * cy * sp - sr * sy
     theta[1, 2] = -cr * sy * sp + sr * cy
     theta[2, 2] = cp * cr
-    
+
     return theta
