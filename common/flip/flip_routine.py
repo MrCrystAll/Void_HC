@@ -1,3 +1,5 @@
+"""Module for the Flip routine"""
+
 from collections.abc import Hashable
 from typing import Any
 

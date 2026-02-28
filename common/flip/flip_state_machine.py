@@ -1,3 +1,5 @@
+"""The module of the Flip state machine"""
+
 from collections.abc import Hashable
 from typing import Any
 
@@ -8,6 +10,9 @@ from common.state_machine import StateMachine
 
 
 class FlipStateMachine(StateMachine[FlipState, FlipAction]):
+    """The state machine for the Flip routine, holds all the states and transitions
+    """
+    
     def reset(
         self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
     ):
