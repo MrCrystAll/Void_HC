@@ -1,7 +1,11 @@
 import time
 
 from rlgym.rocket_league.obs_builders import DefaultObs
-from rlgym.rocket_league.state_mutators import FixedTeamSizeMutator, MutatorSequence, KickoffMutator
+from rlgym.rocket_league.state_mutators import (
+    FixedTeamSizeMutator,
+    MutatorSequence,
+    KickoffMutator,
+)
 from rlgym.rocket_league.reward_functions import TouchReward
 from rlgym.rocket_league.done_conditions import GoalCondition, TimeoutCondition
 from rlgym.rocket_league.sim import RocketSimEngine
@@ -18,11 +22,9 @@ from common.target_shared_info_provider import TargetSharedInfoProvider
 if __name__ == "__main__":
     tick_skip = 16
     act_parser = HCBotEnhancedActionParser(tick_skip)
-    
+
     env = RLGym(
-        state_mutator=MutatorSequence(
-            FixedTeamSizeMutator(1, 1), KickoffMutator()
-        ),
+        state_mutator=MutatorSequence(FixedTeamSizeMutator(1, 1), KickoffMutator()),
         action_parser=act_parser,
         obs_builder=DefaultObs(),
         renderer=RocketSimVisRenderer(),
@@ -30,11 +32,11 @@ if __name__ == "__main__":
         termination_cond=GoalCondition(),
         truncation_cond=TimeoutCondition(10),
         transition_engine=RocketSimEngine(),
-        shared_info_provider=TargetSharedInfoProvider()
+        shared_info_provider=TargetSharedInfoProvider(),
     )
 
     running = True
-    
+
     actions = iter([2, 2, 2, 2, 2, 1] * 100)
 
     print("Running env")
@@ -47,9 +49,9 @@ if __name__ == "__main__":
 
             while not (any(truncated.values()) or any(terminated.values())):
                 env.render()
-                time.sleep(tick_skip/120.0)
-                
-                # agent_actions = act_parser.sample(env.agents)                
+                time.sleep(tick_skip / 120.0)
+
+                # agent_actions = act_parser.sample(env.agents)
                 agent_actions = act_parser.pick(env.agents, next(actions))
 
                 _, _, terminated, truncated = env.step(agent_actions)
