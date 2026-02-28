@@ -1,2 +1,6 @@
-.venv
+.venv/
 __pycache__
+agent_controllers_checkpoints/
+shmem_flinks/
+config.json
+wandb/
