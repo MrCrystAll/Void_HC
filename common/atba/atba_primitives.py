@@ -6,15 +6,14 @@ from common.hc_typing import HCAction, HCActionEnum
 
 
 class ATBAAction(HCActionEnum):
-    """The actions of the ATBA state machine
-    """
-    
+    """The actions of the ATBA state machine"""
+
     # Locks the agent onto the ball
     GO_TO_BALL = 0
-    
+
     # Locks the agent away from the ball
     GO_AWAY_FROM_BALL = auto()
-    
+
     # Does nothing, it's a way to keep the lock on whatever you want without spamming the corresponding action
     NEUTRAL = auto()
 
@@ -24,10 +23,10 @@ class ATBAAction(HCActionEnum):
 
 class ATBAState(IntEnum):
     """All the states of the ATBA machine state"""
-    
+
     # The agent is targetting the ball
     LOCK_ON_BALL = 0
-    
+
     # The agant is fleeing the ball
     LOCK_OFF_BALL = auto()
 

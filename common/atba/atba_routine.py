@@ -15,8 +15,8 @@ from common.routine import Routine
 
 
 class ATBARoutine(Routine[HCMachineAction, np.ndarray, ATBAStateMachine]):
-    """The ATBA (At The Ball Always) routine, allows the ball to drive towards or away from the ball
-    """  
+    """The ATBA (At The Ball Always) routine, allows the ball to drive towards or away from the ball"""
+
     def __init__(self) -> None:
         self.atba_state_machine = ATBAStateMachine()
 
@@ -71,7 +71,7 @@ class ATBARoutine(Routine[HCMachineAction, np.ndarray, ATBAStateMachine]):
             current_output[agent][:, STEER] = yaws[agent]
             current_output[agent][:, PITCH] = pitches[agent]
             current_output[agent][:, ROLL] = rolls[agent]
-            
+
         return current_output
 
     def reset(

@@ -10,9 +10,8 @@ from common.state_machine import StateMachine
 
 
 class FlipStateMachine(StateMachine[FlipState, FlipAction]):
-    """The state machine for the Flip routine, holds all the states and transitions
-    """
-    
+    """The state machine for the Flip routine, holds all the states and transitions"""
+
     def reset(
         self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
     ):

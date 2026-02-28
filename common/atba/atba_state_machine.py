@@ -10,8 +10,8 @@ from common.state_machine import StateMachine
 
 
 class ATBAStateMachine(StateMachine[ATBAState, ATBAAction]):
-    """The ATBA state machine holds all the states and transitions of the ATBA model
-    """
+    """The ATBA state machine holds all the states and transitions of the ATBA model"""
+
     def step(
         self,
         actions: dict[Hashable, ATBAAction],

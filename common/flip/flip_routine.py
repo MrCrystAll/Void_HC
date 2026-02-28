@@ -15,8 +15,8 @@ from common.target_shared_info_provider import TARGET_HEADER
 
 
 class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
-    """The routine allowing the bot to flip based on a target
-    """
+    """The routine allowing the bot to flip based on a target"""
+
     def __init__(self) -> None:
         self.flip_state_machine = FlipStateMachine()
 

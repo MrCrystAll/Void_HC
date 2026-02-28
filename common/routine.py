@@ -11,8 +11,8 @@ StateMachineType = TypeVar("StateMachineType", bound=StateMachine)
 
 
 class Routine(Generic[ActionType, EngineActionType, StateMachineType]):
-    """A routine is an object holding a state machine and applying modifications to an action
-    """
+    """A routine is an object holding a state machine and applying modifications to an action"""
+
     def apply_outputs(
         self,
         actions: dict[Hashable, ActionType],

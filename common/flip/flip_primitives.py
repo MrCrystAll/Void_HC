@@ -31,10 +31,10 @@ class FlipAction(HCActionEnum):
 
     # An action to allow the bot to freely jump
     JUMP = 0
-    
-    # An action that either triggers a flip routine or just a normal flip 
+
+    # An action that either triggers a flip routine or just a normal flip
     FLIP = auto()
-    
+
     # An action to do nothing, used to allow the bot to not trigger one of the 2 actions
     NEUTRAL = auto()
 
@@ -43,14 +43,14 @@ class FlipAction(HCActionEnum):
 
 
 class HCMachineFlipAction(HCAction[FlipAction]):
-    """A Flip action containing the direction of a flip
-    """
+    """A Flip action containing the direction of a flip"""
+
     def __init__(self, flip_action: FlipAction, direction: np.ndarray) -> None:
         super().__init__(flip_action)
 
         assert direction.shape == (2,), (
-            "The direction vector should be a valid 2D vector," + \
-                f"received {direction} (Shape: {direction.shape})"
+            "The direction vector should be a valid 2D vector,"
+            + f"received {direction} (Shape: {direction.shape})"
         )
 
         self.direction = direction
