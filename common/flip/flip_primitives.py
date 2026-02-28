@@ -29,10 +29,16 @@ class FlipState(IntEnum):
 class FlipAction(HCActionEnum):
     """All the actions of the Flip state machine"""
 
+    # An action to allow the bot to freely jump
     JUMP = 0
+    
+    # An action that either triggers a flip routine or just a normal flip 
     FLIP = auto()
+    
+    # An action to do nothing, used to allow the bot to not trigger one of the 2 actions
     NEUTRAL = auto()
 
+    # A util variable to hold the number of actions
     N_ACTIONS = auto()
 
 
