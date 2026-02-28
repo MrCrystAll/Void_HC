@@ -11,8 +11,10 @@ RENDER_MODE_KEY = "RENDER_MODE"
 VERSION = "v1.0.1-Hybrid"
 CONTROLLER_NAME = "Void_Hybrid"
 
+
 def get_render_mode() -> bool:
     return os.getenv(RENDER_MODE_KEY, "False").lower() in ("true", "1", "t")
+
 
 def pnw(value: float, positive_weight: float = 1, negative_weight: float = 1):
     """
@@ -29,6 +31,7 @@ def pnw(value: float, positive_weight: float = 1, negative_weight: float = 1):
         return value * negative_weight
 
     return value
+
 
 def build_rlgym_v2_env():
     import numpy as np
@@ -53,14 +56,22 @@ def build_rlgym_v2_env():
         KickoffMutator,
         MutatorSequence,
     )
-    
+
     from void_logging.api.rewards import RewardLogger, LoggedCombinedReward
     from void_logging.api.wrappers import ChainWrapper
-    from rlgym_tools.rocket_league.reward_functions.velocity_player_to_ball_reward import VelocityPlayerToBallReward
-    from rlgym_tools.rocket_league.shared_info_providers.multi_provider import MultiProvider
-    from rlgym_tools.rocket_league.reward_functions.goal_prob_reward import GoalViewReward
-    from rlgym_tools.rocket_league.reward_functions.advanced_touch_reward import AdvancedTouchReward
-    
+    from rlgym_tools.rocket_league.reward_functions.velocity_player_to_ball_reward import (
+        VelocityPlayerToBallReward,
+    )
+    from rlgym_tools.rocket_league.shared_info_providers.multi_provider import (
+        MultiProvider,
+    )
+    from rlgym_tools.rocket_league.reward_functions.goal_prob_reward import (
+        GoalViewReward,
+    )
+    from rlgym_tools.rocket_league.reward_functions.advanced_touch_reward import (
+        AdvancedTouchReward,
+    )
+
     from common.action_parser import HCBotActionParser
 
     spawn_opponents = True
@@ -78,18 +89,42 @@ def build_rlgym_v2_env():
         TimeoutCondition(timeout_seconds=game_timeout_seconds),
     )
 
-    reward_fn = RewardLogger(LoggedCombinedReward(
-        ChainWrapper(VelocityPlayerToBallReward()).to_logged().apply_operation(lambda val: pnw(val, 1, 0.2)).weight(5.0),
-        ChainWrapper(AdvancedTouchReward(acceleration_reward=1)).to_logged().weight(10.0),
-        ChainWrapper(GoalReward()).to_logged().weight(100.0),
-        ChainWrapper(GoalViewReward()).to_logged().weight(5.0)
-    ))
-    
-    from void_logging.rlgym_learn.reward_shared_info_provider import RewardSharedInfoProvider
-    from void_logging.rocket_league.player_metric_providers import PlayerOnGroundRatioMetricSharedInfoProvider, PlayerTouchMetricSharedInfoProvider, PlayerVelocityMetricSharedInfoProvider, PlayerBallHitForceMetricSharedInfoProvider, PlayerHeightMetricSharedInfoProvider
-    from void_logging.rocket_league.state_metric_providers import GoalMetricSharedInfoProvider, GoalScoreSpeedSharedInfoProvider
-    from void_logging.rocket_league.ball_metric_providers import BallHeightMetricSharedInfoProvider, BallAccelerationMetricSharedInfoProvider, BallVelocityMetricSharedInfoProvider
-    from rlgym_tools.rocket_league.renderers.rocketsimvis_renderer import RocketSimVisRenderer
+    reward_fn = RewardLogger(
+        LoggedCombinedReward(
+            ChainWrapper(VelocityPlayerToBallReward())
+            .to_logged()
+            .apply_operation(lambda val: pnw(val, 1, 0.2))
+            .weight(5.0),
+            ChainWrapper(AdvancedTouchReward(acceleration_reward=1))
+            .to_logged()
+            .weight(10.0),
+            ChainWrapper(GoalReward()).to_logged().weight(100.0),
+            ChainWrapper(GoalViewReward()).to_logged().weight(5.0),
+        )
+    )
+
+    from void_logging.rlgym_learn.reward_shared_info_provider import (
+        RewardSharedInfoProvider,
+    )
+    from void_logging.rocket_league.player_metric_providers import (
+        PlayerOnGroundRatioMetricSharedInfoProvider,
+        PlayerTouchMetricSharedInfoProvider,
+        PlayerVelocityMetricSharedInfoProvider,
+        PlayerBallHitForceMetricSharedInfoProvider,
+        PlayerHeightMetricSharedInfoProvider,
+    )
+    from void_logging.rocket_league.state_metric_providers import (
+        GoalMetricSharedInfoProvider,
+        GoalScoreSpeedSharedInfoProvider,
+    )
+    from void_logging.rocket_league.ball_metric_providers import (
+        BallHeightMetricSharedInfoProvider,
+        BallAccelerationMetricSharedInfoProvider,
+        BallVelocityMetricSharedInfoProvider,
+    )
+    from rlgym_tools.rocket_league.renderers.rocketsimvis_renderer import (
+        RocketSimVisRenderer,
+    )
 
     obs_builder = DefaultObs(
         zero_padding=team_size,
@@ -120,22 +155,20 @@ def build_rlgym_v2_env():
         transition_engine=RocketSimEngine(),
         shared_info_provider=MultiProvider(
             RewardSharedInfoProvider(),
-            
             BallHeightMetricSharedInfoProvider(),
             BallVelocityMetricSharedInfoProvider(),
             BallAccelerationMetricSharedInfoProvider(),
-            
             PlayerBallHitForceMetricSharedInfoProvider(),
             PlayerHeightMetricSharedInfoProvider(),
             PlayerOnGroundRatioMetricSharedInfoProvider(),
             PlayerTouchMetricSharedInfoProvider(),
             PlayerVelocityMetricSharedInfoProvider(),
-            
             GoalMetricSharedInfoProvider(),
-            GoalScoreSpeedSharedInfoProvider()
+            GoalScoreSpeedSharedInfoProvider(),
         ),
-        renderer=RocketSimVisRenderer()
+        renderer=RocketSimVisRenderer(),
     )
+
 
 def get_latest_checkpoint_to_load(controller_name: str, version: str) -> str | None:
     import os.path
@@ -154,6 +187,7 @@ def get_latest_checkpoint_to_load(controller_name: str, version: str) -> str | N
 
     return checkpoint_to_load
 
+
 if __name__ == "__main__":
     from argparse import ArgumentParser
 
@@ -166,7 +200,7 @@ if __name__ == "__main__":
     args = arg_parser.parse_args()
 
     os.environ[RENDER_MODE_KEY] = str(args.render)
-    
+
     from typing import Tuple
 
     import numpy as np
@@ -200,8 +234,14 @@ if __name__ == "__main__":
     from rlgym_learn.rocket_league import GameStatePythonSerde
     from void_logging.logging_utils import REWARDS_HEADER, METRICS_HEADER
     from void_logging.rlgym_learn.multi_logger import MultiLogger
-    from void_logging.rlgym_learn.metric_logger import custom_metrics_serde, CustomMetricLogger
-    from void_logging.rlgym_learn.reward_metrics_logger import reward_metric_logger_serde, RewardMetricsLogger
+    from void_logging.rlgym_learn.metric_logger import (
+        custom_metrics_serde,
+        CustomMetricLogger,
+    )
+    from void_logging.rlgym_learn.reward_metrics_logger import (
+        reward_metric_logger_serde,
+        RewardMetricsLogger,
+    )
 
     # The obs_space_type and action_space_type are determined by your choice of ObsBuilder and ActionParser respectively.
     # The logic used here assumes you are using the types defined by the DefaultObs and LookupTableAction above.
@@ -217,7 +257,7 @@ if __name__ == "__main__":
 
     def critic_factory(obs_space: DefaultObsSpaceType, device: str):
         return BasicCritic(obs_space[1], (256, 256, 256), device)
-    
+
     if get_render_mode():
         process_config = ProcessConfigModel(
             n_proc=1,
@@ -248,9 +288,9 @@ if __name__ == "__main__":
                 shared_info_serde_type=PyAnySerdeType.TYPEDDICT(
                     {
                         REWARDS_HEADER: reward_metric_logger_serde,
-                        METRICS_HEADER: custom_metrics_serde
+                        METRICS_HEADER: custom_metrics_serde,
                     }
-                )
+                ),
             ),
             timestep_limit=1_000_000_000,  # Train for 1B steps
         ),
@@ -306,7 +346,11 @@ if __name__ == "__main__":
                 actor_factory=actor_factory,
                 critic_factory=critic_factory,
                 experience_buffer=NumpyExperienceBuffer(GAETrajectoryProcessor()),
-                metrics_logger=WandbMetricsLogger(MultiLogger(CustomMetricLogger(), RewardMetricsLogger(), PPOMetricsLogger())),
+                metrics_logger=WandbMetricsLogger(
+                    MultiLogger(
+                        CustomMetricLogger(), RewardMetricsLogger(), PPOMetricsLogger()
+                    )
+                ),
                 obs_standardizer=None,
             )
         },

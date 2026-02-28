@@ -5,6 +5,8 @@ from typing import Any
 import numpy as np
 from rlgym.rocket_league.api import GameState
 
+from common.target_shared_info_provider import TARGET_HEADER
+
 
 class PID(ABC):
     def __init__(self, p: float = 0, i: float = 0, d: float = 0) -> None:
@@ -29,9 +31,11 @@ class PID(ABC):
         shared_info: dict[str, Any],
     ):
         pass
-    
+
     @abstractmethod
-    def update_error(self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]):
+    def update_error(
+        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
+    ):
         pass
 
     @abstractmethod
@@ -58,22 +62,15 @@ class PID(ABC):
 
         self.d_error[agent] *= self.d
 
-        self._computed_error[agent] = self.p_error[agent] + self.i_error[agent] + self.d_error[agent]
+        self._computed_error[agent] = (
+            self.p_error[agent] + self.i_error[agent] + self.d_error[agent]
+        )
 
 
 class SteerPID(PID):
-    def __init__(
-        self,
-        p: float = 0,
-        i: float = 0,
-        d: float = 0,
-        boost_threshold: float = 0,
-        handbrake_threshold: float = 0.5,
-    ) -> None:
+    def __init__(self, p: float = 0, i: float = 0, d: float = 0) -> None:
         super().__init__(p, i, d)
         self._last_tick_count = 0
-        self.boost_threshold = boost_threshold
-        self.handbrake_threshold = handbrake_threshold
 
     def reset(
         self,
@@ -87,12 +84,17 @@ class SteerPID(PID):
         self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
     ) -> dict[Hashable, Any]:
         return {agent: state.ball.position for agent in agents}
-    
-    def update_error(self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]):
-       
+
+    def update_error(
+        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
+    ):
         _targets = self.get_targets(agents, state, shared_info)
+
+        for agent, target in _targets.items():
+            shared_info[TARGET_HEADER][agent]["steer"] = target
+
         ticks_passed = max(state.tick_count - self._last_tick_count, 1)
-        
+
         for agent in agents:
             _car = state.cars[agent]
             _agent_position = _car.physics.position
@@ -102,7 +104,7 @@ class SteerPID(PID):
 
             _error = np.cross(_car.physics.forward, _to_target)
             _error = np.dot(_error, _car.physics.up)
-            
+
             self.apply_error(agent, ticks_passed, _error)
         self._last_tick_count = state.tick_count
 
@@ -112,12 +114,7 @@ class SteerPID(PID):
         _expected_yaws = {}
 
         for agent in agents:
-
-            _expected_yaws[agent] = (
-                self._computed_error[agent],
-                abs(self._raw_error[agent]) < self.boost_threshold,
-                abs(self._raw_error[agent]) > self.handbrake_threshold,
-            )
+            _expected_yaws[agent] = self._computed_error[agent]
 
         return _expected_yaws
 
@@ -139,11 +136,13 @@ class PitchPID(PID):
         self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
     ) -> dict[Hashable, Any]:
         return {agent: state.ball.position for agent in agents}
-    
-    def update_error(self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]):
+
+    def update_error(
+        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
+    ):
         _targets = self.get_targets(agents, state, shared_info)
         ticks_passed = max(state.tick_count - self._last_tick_count, 1)
-        
+
         for agent in agents:
             _car = state.cars[agent]
             _agent_position = _car.physics.position
@@ -155,7 +154,7 @@ class PitchPID(PID):
             _error = np.dot(_error, _car.physics.left)
 
             self.apply_error(agent, ticks_passed, _error)
-            
+
         self._last_tick_count = state.tick_count
 
     def get_output(
@@ -186,8 +185,10 @@ class RollPID(PID):
         self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
     ) -> dict[Hashable, Any]:
         return {agent: np.asarray([0, 0, 1]) for agent in agents}
-    
-    def update_error(self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]):
+
+    def update_error(
+        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
+    ):
         _targets = self.get_targets(agents, state, shared_info)
 
         for agent in agents:
@@ -199,7 +200,7 @@ class RollPID(PID):
             ticks_passed = max(state.tick_count - self._last_tick_count, 1)
 
             self.apply_error(agent, ticks_passed, _error)
-            
+
         self._last_tick_count = state.tick_count
 
     def get_output(
