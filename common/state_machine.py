@@ -1,11 +1,10 @@
 from abc import abstractmethod
 from collections.abc import Hashable
-from typing import Any, Generic, TypeVar
-
-MachineStateType = TypeVar("MachineStateType")
-MachineActionType = TypeVar("MachineActionType")
+from typing import Any, Generic
 
 from rlgym.rocket_league.api import GameState
+
+from common.hc_typing import MachineActionType, MachineStateType
 
 class StateMachine(Generic[MachineStateType, MachineActionType]):
     def __init__(self) -> None:
@@ -16,5 +15,5 @@ class StateMachine(Generic[MachineStateType, MachineActionType]):
         pass
     
     @abstractmethod
-    def step(self, actions: dict[Hashable, MachineActionType]):
+    def step(self, actions: dict[Hashable, MachineActionType], state: GameState, shared_info: dict[str, Any]):
         pass

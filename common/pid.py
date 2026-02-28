@@ -5,6 +5,8 @@ from typing import Any
 import numpy as np
 from rlgym.rocket_league.api import GameState
 
+from common.target_shared_info_provider import TARGET_HEADER
+
 
 class PID(ABC):
     def __init__(self, p: float = 0, i: float = 0, d: float = 0) -> None:
@@ -66,14 +68,10 @@ class SteerPID(PID):
         self,
         p: float = 0,
         i: float = 0,
-        d: float = 0,
-        boost_threshold: float = 0,
-        handbrake_threshold: float = 0.5,
+        d: float = 0
     ) -> None:
         super().__init__(p, i, d)
         self._last_tick_count = 0
-        self.boost_threshold = boost_threshold
-        self.handbrake_threshold = handbrake_threshold
 
     def reset(
         self,
@@ -89,8 +87,11 @@ class SteerPID(PID):
         return {agent: state.ball.position for agent in agents}
     
     def update_error(self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]):
-       
         _targets = self.get_targets(agents, state, shared_info)
+        
+        for agent, target in _targets.items():
+            shared_info[TARGET_HEADER][agent]["steer"] = target
+        
         ticks_passed = max(state.tick_count - self._last_tick_count, 1)
         
         for agent in agents:
@@ -113,11 +114,7 @@ class SteerPID(PID):
 
         for agent in agents:
 
-            _expected_yaws[agent] = (
-                self._computed_error[agent],
-                abs(self._raw_error[agent]) < self.boost_threshold,
-                abs(self._raw_error[agent]) > self.handbrake_threshold,
-            )
+            _expected_yaws[agent] = self._computed_error[agent]
 
         return _expected_yaws
 
