@@ -1,8 +1,12 @@
+[Back to main](../README.md)
+
+
+
 # Flip / dodge routine
 
 ## State machine
 
-![Flip](../images/Flip.png)
+![Flip](../images/Void%20HC-Flip%20routine.png)
 
 Every transition to "Is flipping" requires the yaw/pitch input from the net.
 
@@ -35,3 +39,5 @@ If i allow the manual flipping, that means the jump input is not tied to the yaw
 But what if it "jumps" while already jumping ? Should i consider this action as flipping ? Should i consider a double jump as a "is flipping" state -> technically that's a 0 yaw/pitch flip right?
 
 I finished talking about it here: https://discord.com/channels/348658686962696195/1476251762150346882/1477066491705688124
+
+[Back to top](#flip--dodge-routine)
