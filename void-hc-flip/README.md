@@ -2,7 +2,7 @@
 
 ## State machine
 
-![Flip](../../images/Flip.png)
+![Flip](../images/Flip.png)
 
 Every transition to "Is flipping" requires the yaw/pitch input from the net.
 
