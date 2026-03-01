@@ -5,11 +5,11 @@ from typing import Any
 
 from rlgym.rocket_league.api import GameState
 
-from common.flip.flip_primitives import FlipAction, FlipState
-from common.state_machine import StateMachine
+from void_hc.api.state_machine import StateMachine
+from void_hc.flip.flip_primitives import FlipAction, FlipState
 
 
-class FlipStateMachine(StateMachine[FlipState, FlipAction]):
+class FlipStateMachine(StateMachine[Hashable, FlipState, FlipAction, GameState]):
     """The state machine for the Flip routine, holds all the states and transitions"""
 
     def reset(

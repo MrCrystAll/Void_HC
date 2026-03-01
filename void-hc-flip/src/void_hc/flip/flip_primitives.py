@@ -4,7 +4,7 @@ from enum import IntEnum, auto
 
 import numpy as np
 
-from common.hc_typing import HCAction, HCActionEnum
+from void_hc.api.hc_typing import HCAction, HCActionEnum
 
 
 class FlipState(IntEnum):
@@ -45,7 +45,9 @@ class FlipAction(HCActionEnum):
 class HCMachineFlipAction(HCAction[FlipAction]):
     """A Flip action containing the direction of a flip"""
 
-    def __init__(self, flip_action: FlipAction, direction: np.ndarray) -> None:
+    def __init__(
+        self, flip_action: FlipAction, direction: np.ndarray = np.zeros((2,))
+    ) -> None:
         super().__init__(flip_action)
 
         assert direction.shape == (2,), (

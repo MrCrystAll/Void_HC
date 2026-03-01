@@ -7,14 +7,16 @@ import numpy as np
 from rlgym.rocket_league.api import GameState
 from rlgym.rocket_league.common_values import JUMP, PITCH, YAW
 
-from common.flip.flip_primitives import FlipAction, FlipState, HCMachineFlipAction
-from common.flip.flip_state_machine import FlipStateMachine
-from common.machine_action import HCMachineAction
-from common.routine import Routine
-from common.target_shared_info_provider import TARGET_HEADER
+from void_hc.api.hc_typing import HCMachineAction
+from void_hc.flip.flip_primitives import FlipAction, FlipState, HCMachineFlipAction
+from void_hc.flip.flip_state_machine import FlipStateMachine
+from void_hc.api.routine import Routine
+from void_hc.api.target_shared_info_provider import TARGET_HEADER
 
 
-class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
+class FlipRoutine(
+    Routine[Hashable, HCMachineFlipAction, np.ndarray, FlipStateMachine, GameState]
+):
     """The routine allowing the bot to flip based on a target"""
 
     def __init__(self) -> None:
@@ -22,19 +24,19 @@ class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
 
     def apply_outputs(
         self,
-        actions: dict[Hashable, HCMachineAction],
+        actions: dict[Hashable, HCMachineFlipAction],
         current_output: dict[Hashable, np.ndarray],
         state: GameState,
         shared_info: dict[str, Any],
     ) -> dict[Hashable, np.ndarray]:
         self.flip_state_machine.step(
-            {k: v.flip_action for k, v in actions.items()}, state, shared_info
+            {k: v.action for k, v in actions.items()}, state, shared_info
         )
 
         print(self.state_machine.states)
 
         for agent, action in actions.items():
-            match action.flip_action:
+            match action.action:
                 case FlipAction.JUMP:
                     current_output[agent] = self._create_jump_action(
                         current_output[agent], agent
@@ -43,7 +45,7 @@ class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
                     current_output[agent] = self._create_flip_action(
                         current_output[agent],
                         agent,
-                        action.flip_action,
+                        action,
                         state,
                         shared_info,
                     )
@@ -65,7 +67,7 @@ class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
         self,
         output: np.ndarray,
         agent: Hashable,
-        action: FlipAction,
+        action: HCMachineFlipAction,
         state: GameState,
         shared_info: dict[str, Any],
     ) -> np.ndarray:
@@ -79,12 +81,12 @@ class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
         _direction /= np.linalg.norm(_direction)
         _direction = _direction[:2]
 
-        _action = HCMachineFlipAction(action, _direction)
+        action.direction = _direction
 
-        print(_action.direction)
+        print(action.direction)
 
-        _pitch_input = abs(_action.direction[0]) * -np.sign(_action.direction[0])
-        _yaw_input = abs(_action.direction[1]) * np.sign(_action.direction[1])
+        _pitch_input = abs(action.direction[0]) * -np.sign(action.direction[0])
+        _yaw_input = abs(action.direction[1]) * np.sign(action.direction[1])
 
         match _state:
             case FlipState.IS_FLIPPING:
@@ -106,3 +108,13 @@ class FlipRoutine(Routine[HCMachineAction, np.ndarray, FlipStateMachine]):
     @property
     def state_machine(self) -> FlipStateMachine:
         return self.flip_state_machine
+
+    def get_sub_action_from_top_action(
+        self, top_action: HCMachineAction
+    ) -> HCMachineFlipAction:
+        _action = top_action["flip"]
+        if not isinstance(_action, HCMachineFlipAction):
+            raise ValueError(
+                f'Expected {HCMachineFlipAction.__name__} at the "flip" slot but got {type(_action).__name__}'
+            )
+        return _action

@@ -2,7 +2,7 @@
 
 from enum import IntEnum, auto
 
-from common.hc_typing import HCAction, HCActionEnum
+from void_hc.api.hc_typing import HCAction, HCActionEnum
 
 
 class ATBAAction(HCActionEnum):

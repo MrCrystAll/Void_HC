@@ -36,7 +36,7 @@ def pnw(value: float, positive_weight: float = 1, negative_weight: float = 1):
 def build_rlgym_v2_env():
     import numpy as np
     from rlgym.api import RLGym
-    from rlgym.rocket_league import common_values
+    from rlgym.rocket_league import void_hc_values
     from rlgym.rocket_league.action_parsers import LookupTableAction, RepeatAction
     from rlgym.rocket_league.done_conditions import (
         AnyCondition,
@@ -72,7 +72,7 @@ def build_rlgym_v2_env():
         AdvancedTouchReward,
     )
 
-    from common.action_parser import HCBotActionParser
+    from void_hc.action_parser import HCBotActionParser
 
     spawn_opponents = True
     team_size = 1
@@ -130,14 +130,14 @@ def build_rlgym_v2_env():
         zero_padding=team_size,
         pos_coef=np.asarray(
             [
-                1 / common_values.SIDE_WALL_X,
-                1 / common_values.BACK_NET_Y,
-                1 / common_values.CEILING_Z,
+                1 / void_hc_values.SIDE_WALL_X,
+                1 / void_hc_values.BACK_NET_Y,
+                1 / void_hc_values.CEILING_Z,
             ]
         ),
         ang_coef=1 / np.pi,
-        lin_vel_coef=1 / common_values.CAR_MAX_SPEED,
-        ang_vel_coef=1 / common_values.CAR_MAX_ANG_VEL,
+        lin_vel_coef=1 / void_hc_values.CAR_MAX_SPEED,
+        ang_vel_coef=1 / void_hc_values.CAR_MAX_ANG_VEL,
         boost_coef=1 / 100.0,
     )
 

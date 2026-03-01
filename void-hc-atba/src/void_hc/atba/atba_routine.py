@@ -7,14 +7,16 @@ import numpy as np
 from rlgym.rocket_league.api import GameState
 from rlgym.rocket_league.common_values import THROTTLE, YAW, PITCH, STEER, ROLL
 
-from common.atba.atba_primitives import ATBAState
-from common.atba.atba_state_machine import ATBAStateMachine
-from common.machine_action import HCMachineAction
-from common.pid import PitchPID, RollPID, SteerPID
-from common.routine import Routine
+from void_hc.api.hc_typing import HCAction
+from void_hc.atba.atba_primitives import ATBAState, HCMachineATBAAction
+from void_hc.atba.atba_state_machine import ATBAStateMachine
+from void_hc.atba.pids import PitchPID, RollPID, SteerPID
+from void_hc.api.routine import Routine
 
 
-class ATBARoutine(Routine[HCMachineAction, np.ndarray, ATBAStateMachine]):
+class ATBARoutine(
+    Routine[Hashable, HCMachineATBAAction, np.ndarray, ATBAStateMachine, GameState]
+):
     """The ATBA (At The Ball Always) routine, allows the ball to drive towards or away from the ball"""
 
     def __init__(self) -> None:
@@ -31,7 +33,7 @@ class ATBARoutine(Routine[HCMachineAction, np.ndarray, ATBAStateMachine]):
 
     def apply_outputs(
         self,
-        actions: dict[Hashable, HCMachineAction],
+        actions: dict[Hashable, HCMachineATBAAction],
         current_output: dict[Hashable, np.ndarray],
         state: GameState,
         shared_info: dict[str, Any],
@@ -44,7 +46,7 @@ class ATBARoutine(Routine[HCMachineAction, np.ndarray, ATBAStateMachine]):
         self.roll_stabilization_pid.update_error(agents, state, shared_info)
 
         self.atba_state_machine.step(
-            {k: v.atba_action for k, v in actions.items()}, state, shared_info
+            {k: v.action for k, v in actions.items()}, state, shared_info
         )
 
         on_ground_yaws = self.steer_towards_ball_pid.get_output(
@@ -86,3 +88,13 @@ class ATBARoutine(Routine[HCMachineAction, np.ndarray, ATBAStateMachine]):
         self.in_air_steer_towards_ball_pid.reset(agents, initial_state, shared_info)
         self.pitch_towards_ball_pid.reset(agents, initial_state, shared_info)
         self.roll_stabilization_pid.reset(agents, initial_state, shared_info)
+
+    def get_sub_action_from_top_action(
+        self, top_action: dict[str, HCAction]
+    ) -> HCMachineATBAAction:
+        _action = top_action["atba"]
+        if not isinstance(_action, HCMachineATBAAction):
+            raise ValueError(
+                f'Expected {HCMachineATBAAction.__name__} at the "atba" slot but got {type(_action).__name__}'
+            )
+        return _action

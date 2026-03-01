@@ -1,52 +1,53 @@
 from abc import abstractmethod
-from collections.abc import Hashable
 from typing import Any, Generic, TypeVar
 
-from rlgym.api import ActionType, EngineActionType
-from rlgym.rocket_league.api import GameState
+from rlgym.api import ActionType, EngineActionType, StateType, AgentID
 
-from common.state_machine import StateMachine
+from void_hc.api.hc_typing import HCMachineAction
+from void_hc.api.state_machine import StateMachine
 
 StateMachineType = TypeVar("StateMachineType", bound=StateMachine)
 
 
-class Routine(Generic[ActionType, EngineActionType, StateMachineType]):
+class Routine(
+    Generic[AgentID, ActionType, EngineActionType, StateMachineType, StateType]
+):
     """A routine is an object holding a state machine and applying modifications to an action"""
 
     def apply_outputs(
         self,
-        actions: dict[Hashable, ActionType],
-        current_output: dict[Hashable, EngineActionType],
-        state: GameState,
+        actions: dict[AgentID, ActionType],
+        current_output: dict[AgentID, EngineActionType],
+        state: StateType,
         shared_info: dict[str, Any],
-    ) -> dict[Hashable, EngineActionType]:
+    ) -> dict[AgentID, EngineActionType]:
         """Applies modification to a dictionnary of agents/actions
 
         :param actions: The actions performed by the agents
-        :type actions: dict[Hashable, ActionType]
+        :type actions: dict[AgentID, ActionType]
         :param current_output: The output to modify
-        :type current_output: dict[Hashable, EngineActionType]
+        :type current_output: dict[AgentID, EngineActionType]
         :param state: The state to use to calculate changes
-        :type state: GameState
+        :type state: StateType
         :param shared_info: The shared info of the environment
         :type shared_info: dict[str, Any]
         :return: Modified actions
-        :rtype: dict[Hashable, EngineActionType]
+        :rtype: dict[AgentID, EngineActionType]
         """
         return current_output
 
     def reset(
         self,
-        agents: list[Hashable],
-        initial_state: GameState,
+        agents: list[AgentID],
+        initial_state: StateType,
         shared_info: dict[str, Any],
     ):
         """Resets the state machine of the object
 
         :param agents: Agents to reset
-        :type agents: list[Hashable]
+        :type agents: list[AgentID]
         :param initial_state: The state to reset on
-        :type initial_state: GameState
+        :type initial_state: StateType
         :param shared_info: The shared info upon reset
         :type shared_info: dict[str, Any]
         """
@@ -61,4 +62,13 @@ class Routine(Generic[ActionType, EngineActionType, StateMachineType]):
         :return: The state machine of the object
         :rtype: StateMachineType
         """
-        pass
+
+    @abstractmethod
+    def get_sub_action_from_top_action(self, top_action: HCMachineAction) -> ActionType:
+        """Fetches the action from the action returned by the action parser
+
+        :param top_action: The action returned by the action parser
+        :type top_action: HCMachineAction
+        :return: The action made for the routine and state machine
+        :rtype: ActionType
+        """

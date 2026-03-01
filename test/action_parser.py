@@ -7,12 +7,13 @@ from rlgym.api import ActionParser
 
 from rlgym.rocket_league.api import GameState
 
-from common.atba.atba_primitives import ATBAAction
-from common.atba.atba_routine import ATBARoutine
-from common.flip.flip_routine import FlipRoutine
-from common.flip.flip_state_machine import FlipAction
-from common.machine_action import HCMachineAction
-from common.routine_sequencer import RoutineSequencer
+from void_hc.api.hc_typing import HCMachineAction
+from void_hc.api.routine_sequencer import RoutineSequencer
+from void_hc.atba.atba_primitives import ATBAAction, HCMachineATBAAction
+from void_hc.atba.atba_routine import ATBARoutine
+from void_hc.flip.flip_primitives import HCMachineFlipAction
+from void_hc.flip.flip_routine import FlipRoutine
+from void_hc.flip.flip_state_machine import FlipAction
 
 
 class HCBotEnhancedActionParser(
@@ -31,7 +32,10 @@ class HCBotEnhancedActionParser(
         for atba_action in range(ATBAAction.N_ACTIONS):
             for flip_action in range(FlipAction.N_ACTIONS):
                 actions.append(
-                    HCMachineAction(ATBAAction(atba_action), FlipAction(flip_action))
+                    {
+                        "atba": HCMachineATBAAction(ATBAAction(atba_action)),
+                        "flip": HCMachineFlipAction(FlipAction(flip_action)),
+                    }
                 )
 
         return np.asarray(actions, dtype=HCMachineAction)
@@ -65,7 +69,6 @@ class HCBotEnhancedActionParser(
                 action = action.squeeze(1)
 
             parsed_actions[agent] = self._lookup_table[action.squeeze()]
-            print(agent, [parsed_actions[agent].flip_action.name])
 
         return self.routine_sequencer.get_outputs(parsed_actions, state, shared_info)
 

@@ -5,11 +5,11 @@ from typing import Any
 
 from rlgym.rocket_league.api import GameState
 
-from common.atba.atba_primitives import ATBAAction, ATBAState
-from common.state_machine import StateMachine
+from void_hc.atba.atba_primitives import ATBAAction, ATBAState
+from void_hc.api.state_machine import StateMachine
 
 
-class ATBAStateMachine(StateMachine[ATBAState, ATBAAction]):
+class ATBAStateMachine(StateMachine[Hashable, ATBAState, ATBAAction, GameState]):
     """The ATBA state machine holds all the states and transitions of the ATBA model"""
 
     def step(

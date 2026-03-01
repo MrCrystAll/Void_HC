@@ -1,70 +1,11 @@
-from abc import ABC, abstractmethod
 from collections.abc import Hashable
 from typing import Any
 
 import numpy as np
 from rlgym.rocket_league.api import GameState
 
-from common.target_shared_info_provider import TARGET_HEADER
-
-
-class PID(ABC):
-    def __init__(self, p: float = 0, i: float = 0, d: float = 0) -> None:
-        self.p, self.i, self.d = p, i, d
-        self.p_error = {}
-        self.i_error = {}
-        self.d_error = {}
-        self._raw_error = {}
-        self._computed_error = {}
-
-    @abstractmethod
-    def get_targets(
-        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
-    ) -> dict[Hashable, Any]:
-        pass
-
-    @abstractmethod
-    def reset(
-        self,
-        agents: list[Hashable],
-        initial_state: GameState,
-        shared_info: dict[str, Any],
-    ):
-        pass
-
-    @abstractmethod
-    def update_error(
-        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
-    ):
-        pass
-
-    @abstractmethod
-    def get_output(
-        self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
-    ) -> dict[Hashable, Any]:
-        pass
-
-    def apply_error(self, agent: Hashable, ticks_passed: int, error: Any) -> None:
-        self.p_error[agent] = error * self.p
-        self._raw_error[agent] = error
-
-        if agent not in self.i_error:
-            self.i_error[agent] = error * ticks_passed
-        else:
-            self.i_error[agent] += error * ticks_passed
-
-        self.i_error[agent] *= self.i
-
-        if agent not in self.d_error:
-            self.d_error[agent] = error / ticks_passed
-        else:
-            self.d_error[agent] = (error - self.d_error[agent]) / ticks_passed
-
-        self.d_error[agent] *= self.d
-
-        self._computed_error[agent] = (
-            self.p_error[agent] + self.i_error[agent] + self.d_error[agent]
-        )
+from void_hc.api.target_shared_info_provider import TARGET_HEADER
+from void_hc.api.pid import PID
 
 
 class SteerPID(PID):

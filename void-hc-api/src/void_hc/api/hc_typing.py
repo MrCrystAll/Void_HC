@@ -16,3 +16,7 @@ HCActionType = TypeVar("HCActionType", bound=HCActionEnum)
 class HCAction(Generic[HCActionType]):
     def __init__(self, action: HCActionType) -> None:
         self.action = action
+
+
+class HCMachineAction(dict[str, HCAction]):
+    pass

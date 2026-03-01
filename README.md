@@ -10,7 +10,7 @@ I'm using the name "Lua" but realistically it's just an HC experiment for Void, 
 
 | Routine 	| Quick summary                                  	| Documentation                          	|
 |---------	|------------------------------------------------	|----------------------------------------	|
-| ATBA    	| A routine to go towards / away from the ball   	| [Documentation](common/atba/README.md) 	|
+| ATBA    	| A routine to go towards / away from the ball   	| [Documentation](void-hc-atba/README.md) 	|
 | Flip    	| A routine to make the bot flip towards a point 	| [Documentation](common/flip/README.md) 	|
 
 ## Motivation for this project

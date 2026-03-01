@@ -1,0 +1,7 @@
+{
+  "python.analysis.extraPaths": [
+    "./void-hc-api/src",
+    "./void-hc-atba/src",
+    "./void-hc-flip/src"
+  ]
+}

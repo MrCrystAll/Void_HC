@@ -15,8 +15,8 @@ from rlgym_tools.rocket_league.renderers.rocketsimvis_renderer import (
 )
 from rlgym.api import RLGym
 
-from common.action_parser import HCBotEnhancedActionParser
-from common.target_shared_info_provider import TargetSharedInfoProvider
+from action_parser import HCBotEnhancedActionParser
+from void_hc.api.target_shared_info_provider import TargetSharedInfoProvider
 
 
 if __name__ == "__main__":
