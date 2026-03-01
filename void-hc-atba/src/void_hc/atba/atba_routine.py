@@ -8,6 +8,7 @@ from rlgym.rocket_league.api import GameState
 from rlgym.rocket_league.common_values import THROTTLE, YAW, PITCH, STEER, ROLL
 
 from void_hc.api.hc_typing import HCAction
+from void_hc.api.target_shared_info_provider import TARGET_HEADER
 from void_hc.atba.atba_primitives import ATBAState, HCMachineATBAAction
 from void_hc.atba.atba_state_machine import ATBAStateMachine
 from void_hc.atba.pids import PitchPID, RollPID, SteerPID
@@ -68,6 +69,8 @@ class ATBARoutine(
             if self.state_machine.get_state(agent) == ATBAState.LOCK_OFF_BALL:
                 yaws[agent] *= -1
                 pitches[agent] *= -1
+
+                shared_info[TARGET_HEADER][agent]["steer"][:2] *= -1
 
             current_output[agent][:, THROTTLE] = 1
             current_output[agent][:, YAW] = yaws[agent]

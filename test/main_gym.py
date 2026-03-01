@@ -19,6 +19,7 @@ from action_parser import HCBotEnhancedActionParser
 from void_hc.api.target_shared_info_provider import TargetSharedInfoProvider
 
 from void_hc.boost.boost_usage.primitives import BoostUsageAction
+from void_hc.flip.flip_primitives import FlipAction
 
 
 if __name__ == "__main__":
@@ -39,11 +40,15 @@ if __name__ == "__main__":
 
     running = True
 
-    actions = iter([*([4])] * 50)
+    actions = iter([*([5] * 10 + [1] * 1 + [3])] * 200)
 
     print(
         act_parser.get_actions_with(
-            {"boost": (BoostUsageAction.BOOST,), "atba": (0,), "flip": (2,)}
+            {
+                "boost": (BoostUsageAction.NO_BOOST,),
+                "atba": (0,),
+                "flip": (FlipAction.JUMP,),
+            }
         )
     )
 

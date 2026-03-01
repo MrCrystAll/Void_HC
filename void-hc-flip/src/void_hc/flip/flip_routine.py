@@ -89,6 +89,7 @@ class FlipRoutine(
         match _state:
             case FlipState.IS_FLIPPING:
                 output[-1, [JUMP, PITCH, YAW]] = [1, _pitch_input, _yaw_input]
+                output[-3:-1, [PITCH, YAW]] = [0, 0]
                 output[:-3, JUMP] = 1
 
             case FlipState.IS_JUMPING:
@@ -98,6 +99,8 @@ class FlipRoutine(
                 output[:, JUMP] = 1
                 output[-1, PITCH] = _pitch_input
                 output[-1, YAW] = _yaw_input
+
+                output[:-1, [PITCH, YAW]] = [0, 0]
 
                 output[0, JUMP] = 0
 
