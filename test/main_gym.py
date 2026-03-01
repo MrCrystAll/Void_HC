@@ -18,6 +18,8 @@ from rlgym.api import RLGym
 from action_parser import HCBotEnhancedActionParser
 from void_hc.api.target_shared_info_provider import TargetSharedInfoProvider
 
+from void_hc.boost.boost_usage.primitives import BoostUsageAction
+
 
 if __name__ == "__main__":
     tick_skip = 16
@@ -37,7 +39,13 @@ if __name__ == "__main__":
 
     running = True
 
-    actions = iter([*([2] * 20 + [1])] * 50)
+    actions = iter([*([4])] * 50)
+
+    print(
+        act_parser.get_actions_with(
+            {"boost": (BoostUsageAction.BOOST,), "atba": (0,), "flip": (2,)}
+        )
+    )
 
     print("Running env")
     while running:

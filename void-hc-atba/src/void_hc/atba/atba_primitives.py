@@ -14,7 +14,8 @@ class ATBAAction(HCActionEnum):
     # Locks the agent away from the ball
     GO_AWAY_FROM_BALL = auto()
 
-    # Does nothing, it's a way to keep the lock on whatever you want without spamming the corresponding action
+    # Does nothing, it's a way to keep the
+    # lock on whatever you want without spamming the corresponding action
     NEUTRAL = auto()
 
     # A util variable that holds the number of actions

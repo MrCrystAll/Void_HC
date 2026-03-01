@@ -51,7 +51,7 @@ class FlipRoutine(
         return current_output
 
     def _create_jump_action(self, output: np.ndarray, agent: Hashable) -> np.ndarray:
-        _state = self.flip_state_machine.states[agent]
+        _state = self.state_machine.get_state(agent)
 
         match _state:
             case FlipState.ON_GROUND | FlipState.IS_JUMPING:
@@ -69,7 +69,7 @@ class FlipRoutine(
         state: GameState,
         shared_info: dict[str, Any],
     ) -> np.ndarray:
-        _state = self.flip_state_machine.states[agent]
+        _state = self.state_machine.get_state(agent)
 
         _car = state.cars[agent]
 
@@ -77,7 +77,7 @@ class FlipRoutine(
 
         _direction = _target - _car.physics.position
         _direction /= np.linalg.norm(_direction)
-        
+
         _direction = _car.physics.rotation_mtx.T.dot(_direction)
         _direction = _direction[:2]
 
@@ -113,6 +113,7 @@ class FlipRoutine(
         _action = top_action["flip"]
         if not isinstance(_action, HCMachineFlipAction):
             raise ValueError(
-                f'Expected {HCMachineFlipAction.__name__} at the "flip" slot but got {type(_action).__name__}'
+                f"Expected {HCMachineFlipAction.__name__} "
+                + f'at the "flip" slot but got {type(_action).__name__}'
             )
         return _action

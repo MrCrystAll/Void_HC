@@ -17,7 +17,8 @@ from void_hc.api.routine import Routine
 class ATBARoutine(
     Routine[Hashable, HCMachineATBAAction, np.ndarray, ATBAStateMachine, GameState]
 ):
-    """The ATBA (At The Ball Always) routine, allows the ball to drive towards or away from the ball"""
+    """The ATBA (At The Ball Always) routine,
+    allows the ball to drive towards or away from the ball"""
 
     def __init__(self) -> None:
         self.atba_state_machine = ATBAStateMachine()
@@ -64,7 +65,7 @@ class ATBARoutine(
             else:
                 yaws = in_air_yaws
 
-            if self.state_machine.states[agent] == ATBAState.LOCK_OFF_BALL:
+            if self.state_machine.get_state(agent) == ATBAState.LOCK_OFF_BALL:
                 yaws[agent] *= -1
                 pitches[agent] *= -1
 
@@ -95,6 +96,7 @@ class ATBARoutine(
         _action = top_action["atba"]
         if not isinstance(_action, HCMachineATBAAction):
             raise ValueError(
-                f'Expected {HCMachineATBAAction.__name__} at the "atba" slot but got {type(_action).__name__}'
+                f"Expected {HCMachineATBAAction.__name__} "
+                + f'at the "atba" slot but got {type(_action).__name__}'
             )
         return _action

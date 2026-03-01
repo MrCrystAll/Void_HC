@@ -16,7 +16,7 @@ class StateMachine(Generic[AgentID, MachineStateType, MachineActionType, StateTy
     """
 
     def __init__(self) -> None:
-        self.states: dict[AgentID, MachineStateType] = {}
+        self._states: dict[AgentID, MachineStateType] = {}
 
     @abstractmethod
     def reset(
@@ -48,3 +48,23 @@ class StateMachine(Generic[AgentID, MachineStateType, MachineActionType, StateTy
         :param shared_info: The shared info of the environment
         :type shared_info: dict[str, Any]
         """
+
+    def transition(self, agent: AgentID, new_state: MachineStateType):
+        """Brings an agent to a new state
+
+        :param agent: The agent to transition
+        :type agent: AgentID
+        :param new_state: The state to transition it into
+        :type new_state: MachineStateType
+        """
+        self._states[agent] = new_state
+
+    def get_state(self, agent: AgentID) -> MachineStateType | None:
+        """Gets the state of an agent if it exists
+
+        :param agent: The agent to get the state of
+        :type agent: AgentID
+        :return: The state of the agent (None if agent is not in state dictionary)
+        :rtype: MachineStateType | None
+        """
+        return self._states.get(agent)
