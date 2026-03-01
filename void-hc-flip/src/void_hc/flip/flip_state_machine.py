@@ -25,34 +25,34 @@ class FlipStateMachine(StateMachine[Hashable, FlipState, FlipAction, GameState])
     def _update_on_ground(self, agent: Hashable, action: FlipAction):
         match action:
             case FlipAction.JUMP:
-                self._states[agent] = FlipState.IS_JUMPING
+                self.transition(agent, FlipState.IS_JUMPING)
             case FlipAction.FLIP:
-                self._states[agent] = FlipState.IS_FLIPPING
+                self.transition(agent, FlipState.IS_FLIPPING)
 
     def _update_is_jumping(self, agent: Hashable, action: FlipAction):
         match action:
             case FlipAction.JUMP:
-                self._states[agent] = FlipState.IS_DOUBLE_JUMPING
+                self.transition(agent, FlipState.IS_DOUBLE_JUMPING)
             case FlipAction.FLIP:
-                self._states[agent] = FlipState.IS_FLIPPING
+                self.transition(agent, FlipState.IS_FLIPPING)
 
     def _update_is_flipping(self, agent: Hashable, state: GameState):
         _car = state.cars[agent]
 
         if not _car.is_flipping:
-            self._states[agent] = FlipState.HAS_FLIPPED
+            self.transition(agent, FlipState.HAS_FLIPPED)
 
     def _update_has_flipped(self, agent: Hashable, state: GameState):
         _car = state.cars[agent]
 
         if _car.on_ground:
-            self._states[agent] = FlipState.ON_GROUND
+            self.transition(agent, FlipState.ON_GROUND)
 
     def _update_is_double_jumping(self, agent: Hashable, state: GameState):
         _car = state.cars[agent]
 
         if _car.on_ground:
-            self._states[agent] = FlipState.ON_GROUND
+            self.transition(agent, FlipState.ON_GROUND)
 
     def step(
         self,

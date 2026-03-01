@@ -29,14 +29,14 @@ class ATBAStateMachine(StateMachine[Hashable, ATBAState, ATBAAction, GameState])
         self, agents: list[Hashable], state: GameState, shared_info: dict[str, Any]
     ):
         for agent in agents:
-            self._states[agent] = ATBAState.LOCK_ON_BALL
+            self.transition(agent, ATBAState.LOCK_ON_BALL)
 
     def _update_lock_on_ball(self, agent: Hashable, action: ATBAAction):
         match action:
             case ATBAAction.GO_AWAY_FROM_BALL:
-                self._states[agent] = ATBAState.LOCK_OFF_BALL
+                self.transition(agent, ATBAState.LOCK_OFF_BALL)
 
     def _update_lock_off_ball(self, agent: Hashable, action: ATBAAction):
         match action:
             case ATBAAction.GO_TO_BALL:
-                self._states[agent] = ATBAState.LOCK_ON_BALL
+                self.transition(agent, ATBAState.LOCK_ON_BALL)
