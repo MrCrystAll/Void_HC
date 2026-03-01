@@ -33,8 +33,6 @@ class FlipRoutine(
             {k: v.action for k, v in actions.items()}, state, shared_info
         )
 
-        print(self.state_machine.states)
-
         for agent, action in actions.items():
             match action.action:
                 case FlipAction.JUMP:
@@ -75,15 +73,15 @@ class FlipRoutine(
 
         _car = state.cars[agent]
 
-        _target = shared_info[TARGET_HEADER][agent]["steer"]
+        _target: np.ndarray = shared_info[TARGET_HEADER][agent]["steer"]
 
         _direction = _target - _car.physics.position
         _direction /= np.linalg.norm(_direction)
+        
+        _direction = _car.physics.rotation_mtx.T.dot(_direction)
         _direction = _direction[:2]
 
         action.direction = _direction
-
-        print(action.direction)
 
         _pitch_input = abs(action.direction[0]) * -np.sign(action.direction[0])
         _yaw_input = abs(action.direction[1]) * np.sign(action.direction[1])

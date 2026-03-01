@@ -37,7 +37,7 @@ if __name__ == "__main__":
 
     running = True
 
-    actions = iter([2, 2, 2, 2, 2, 1] * 100)
+    actions = iter([*([2] * 20 + [1])] * 50)
 
     print("Running env")
     while running:
@@ -51,8 +51,13 @@ if __name__ == "__main__":
                 env.render()
                 time.sleep(tick_skip / 120.0)
 
-                # agent_actions = act_parser.sample(env.agents)
-                agent_actions = act_parser.pick(env.agents, next(actions))
+                try:
+                    # agent_actions = act_parser.sample(env.agents)
+                    agent_actions = act_parser.pick(env.agents, next(actions))
+                except StopIteration:
+                    print("Finished unraveling actions")
+                    running = False
+                    break
 
                 _, _, terminated, truncated = env.step(agent_actions)
         except KeyboardInterrupt:
