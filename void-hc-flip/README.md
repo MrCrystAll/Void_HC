@@ -1,7 +1,5 @@
 [Back to main](../README.md)
 
-
-
 # Flip / dodge routine
 
 ## State machine
