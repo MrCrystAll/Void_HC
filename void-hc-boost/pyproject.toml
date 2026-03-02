@@ -21,7 +21,7 @@ classifiers = [
 ]
 
 [tool.setuptools.dynamic]
-version = {attr = "void_hc.atba.__version__"}
+version = {attr = "void_hc.boost.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
