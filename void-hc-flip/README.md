@@ -2,7 +2,7 @@
 
 # Flip / dodge routine
 
-|   |   |
+| Python version  | Pylint score |
 |---|---|
 | 3.10    	| ![Pylint score](badges/pylint_flip_3.10.svg)
 | 3.11    	| ![Pylint score](badges/pylint_flip_3.11.svg)

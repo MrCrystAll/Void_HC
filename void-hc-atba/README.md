@@ -4,7 +4,7 @@
 
 ATBA stands for "At The Ball Always". This means that the bot will always try to steer for the ball
 
-|   |   |
+| Python version  | Pylint score |
 |---|---|
 | 3.10    	| ![Pylint score](badges/pylint_atba_3.10.svg)
 | 3.11    	| ![Pylint score](badges/pylint_atba_3.11.svg)
