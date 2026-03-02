@@ -4,9 +4,16 @@
 
 ## Boost usage routine
 
+| Python version  | Pylint score |
+|---|---|
+| 3.10    	| ![Pylint score](badges/pylint_boost_3.10.svg)
+| 3.11    	| ![Pylint score](badges/pylint_boost_3.11.svg)
+| 3.12    	| ![Pylint score](badges/pylint_boost_3.12.svg)
+
+
 ### State machine
 
-![Flip](../images/Void%20HC-Boost%20usage%20routine.png)
+![Boost](../images/Void%20HC-Boost%20usage%20routine.png)
 
 #### Possible scenarios
 

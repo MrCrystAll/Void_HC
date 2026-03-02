@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "void-hc-boost"
-version = "0.1.0"
+dynamic = ["version"]
 description = "The boost routines used by Void HC"
 readme = "README.md"
 authors = [
@@ -19,6 +19,9 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
+
+[tool.setuptools.dynamic]
+version = {attr = "void_hc.atba.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
