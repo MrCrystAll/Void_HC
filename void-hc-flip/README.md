@@ -2,11 +2,11 @@
 
 # Flip / dodge routine
 
-Py 3.10: ![Pylint score](badges/pylint_flip_3.10.svg)
-
-Py 3.11: ![Pylint score](badges/pylint_flip_3.11.svg)
-
-Py 3.12: ![Pylint score](badges/pylint_flip_3.12.svg)
+|   |   |
+|---|---|
+| 3.10    	| ![Pylint score](badges/pylint_flip_3.10.svg)
+| 3.11    	| ![Pylint score](badges/pylint_flip_3.11.svg)
+| 3.12    	| ![Pylint score](badges/pylint_flip_3.12.svg)
 
 ## State machine
 
