@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "void-hc-api"
-version = "0.1.0"
+dynamic = ["version"]
 description = "The API used to create routines for Void HC"
 readme = "README.md"
 authors = [
@@ -12,13 +12,17 @@ authors = [
 ]
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-dependencies = ["rlgym[api]"]
+dependencies = ["rlgym"]
 # Optional: define classifiers for PyPI
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent"
 ]
+
+
+[tool.setuptools.dynamic]
+version = {attr = "void_hc.api.__version__"}
 
 [tool.setuptools.packages.find]
 where = ["src"]
