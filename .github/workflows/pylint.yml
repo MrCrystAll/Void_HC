@@ -58,8 +58,6 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - run: |
-          ls /tmp/badges
-
           git config user.name "Badge Updater Bot"
           git config user.email "<>"
 
@@ -67,7 +65,7 @@ jobs:
           mv /tmp/badges/pylint_atba* void-hc-atba/badges/
           mv /tmp/badges/pylint_flip* void-hc-flip/badges/
 
-          git add badges/
+          git add void-hc-api/badges/ void-hc-atba/badges/ void-hc-flip/badges/
           git commit -m "Update badges" || true
           git push
 
