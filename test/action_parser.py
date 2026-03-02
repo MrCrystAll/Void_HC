@@ -7,7 +7,7 @@ from rlgym.api import ActionParser
 
 from rlgym.rocket_league.api import GameState
 
-from void_hc.api.hc_typing import HCAction, HCMachineAction
+from void_hc.api.hc_typing import HCMachineAction
 from void_hc.api.routine_sequencer import RoutineSequencer
 from void_hc.atba.atba_primitives import ATBAAction, HCMachineATBAAction
 from void_hc.atba.atba_routine import ATBARoutine
