@@ -58,6 +58,8 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
       - run: |
+          ls /tmp/badges
+
           git config user.name "Badge Updater Bot"
           git config user.email "<>"
 
