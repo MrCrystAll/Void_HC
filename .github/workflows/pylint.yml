@@ -1,0 +1,73 @@
+name: Pylint
+
+on:
+  pull_request:
+    branches:
+    - main
+    - dev
+  push:
+    branches:
+    - main
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+        package: ["api", "atba", "flip"]
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install ./void-hc-api ./void-hc-${{ matrix.package }} pylint anybadge
+      
+    - name: Analysing the code with pylint
+      run: |
+        rm -f void-hc-${{ matrix.package }}/badges/pylint_*
+
+        pylint --output-format=text --output=pylint.log void-hc-${{ matrix.package }} --fail-under 5
+        PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.log)
+        anybadge -l pylint -v $PYLINT_SCORE -f void-hc-${{ matrix.package }}/badges/pylint_${{matrix.package}}_${{matrix.python-version}}.svg 2=red 4=orange 8=yellow 10=green
+
+    - uses: actions/upload-artifact@v6
+      name: Upload badges
+      with:
+        name: pylint_${{ matrix.package }}-${{matrix.python-version}}
+        path: void-hc-${{ matrix.package }}/badges/pylint_${{matrix.package}}_${{matrix.python-version}}.svg
+
+  update:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - uses: actions/download-artifact@v7
+        with:
+          path: /tmp/badges
+          pattern: pylint_*
+          merge-multiple: true
+      - uses: actions/checkout@v4
+        name: "Update badges"
+        with:
+          ref: ${{ github.head_ref }}
+      - run: |
+          git config user.name "Badge Updater Bot"
+          git config user.email "<>"
+
+          mv /tmp/badges/pylint_api* void-hc-api/badges/
+          mv /tmp/badges/pylint_atba* void-hc-atba/badges/
+          mv /tmp/badges/pylint_flip* void-hc-flip/badges/
+
+          git add void-hc-api/badges/ void-hc-atba/badges/ void-hc-flip/badges/
+          git commit -m "Update badges" || true
+          git push
+
+        
+        

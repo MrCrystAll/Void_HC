@@ -6,6 +6,8 @@ The whole point of the experiment is to use hardcoded routines and knowledge usu
 
 I'm using the name "Lua" but realistically it's just an HC experiment for Void, hence the "/".
 
+API Documentation: [Documentation](void-hc-api/README.md)
+
 ## Routines used in this bot
 
 | Routine 	| Quick summary                                  	| Documentation                          	|

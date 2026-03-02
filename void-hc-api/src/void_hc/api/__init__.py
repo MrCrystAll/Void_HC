@@ -5,3 +5,4 @@ from .routine import Routine
 from .state_machine import StateMachine
 
 __all__ = ["PID", "Routine", "StateMachine"]
+__version__ = "0.1.0"
