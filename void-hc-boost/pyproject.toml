@@ -12,7 +12,7 @@ authors = [
 ]
 license = { file = "LICENSE" }
 requires-python = ">=3.10"
-dependencies = ["void-hc-api", "rlgym[rocket-league]"]
+dependencies = ["void-hc-api", "rlgym[rl-sim]"]
 # Optional: define classifiers for PyPI
 classifiers = [
     "Programming Language :: Python :: 3",
