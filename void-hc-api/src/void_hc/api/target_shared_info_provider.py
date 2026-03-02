@@ -1,3 +1,5 @@
+"""This module contains the target shared info provider"""
+
 from typing import Any, Dict, Generic, List
 
 from rlgym.api import SharedInfoProvider, AgentID, StateType
@@ -8,6 +10,8 @@ TARGET_HEADER = "targets"
 class TargetSharedInfoProvider(
     Generic[AgentID, StateType], SharedInfoProvider[AgentID, StateType]
 ):
+    """The target shared info provider allows routines to share objects between eachother"""
+
     def create(self, shared_info: Dict[str, Any]) -> Dict[str, Any]:
         shared_info[TARGET_HEADER] = {}
 

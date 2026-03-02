@@ -1,3 +1,5 @@
+"""This module contains the base routine class"""
+
 from abc import abstractmethod
 from typing import Any, Generic, TypeVar
 
@@ -14,6 +16,7 @@ class Routine(
 ):
     """A routine is an object holding a state machine and applying modifications to an action"""
 
+    @abstractmethod
     def apply_outputs(
         self,
         actions: dict[AgentID, ActionType],
@@ -34,7 +37,6 @@ class Routine(
         :return: Modified actions
         :rtype: dict[AgentID, EngineActionType]
         """
-        return current_output
 
     def reset(
         self,

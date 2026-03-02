@@ -8,6 +8,7 @@ from rlgym.rocket_league.api import GameState
 from rlgym.rocket_league.common_values import THROTTLE, YAW, PITCH, STEER, ROLL
 
 from void_hc.api.hc_typing import HCAction
+from void_hc.api.target_shared_info_provider import TARGET_HEADER
 from void_hc.atba.atba_primitives import ATBAState, HCMachineATBAAction
 from void_hc.atba.atba_state_machine import ATBAStateMachine
 from void_hc.atba.pids import PitchPID, RollPID, SteerPID
@@ -17,7 +18,8 @@ from void_hc.api.routine import Routine
 class ATBARoutine(
     Routine[Hashable, HCMachineATBAAction, np.ndarray, ATBAStateMachine, GameState]
 ):
-    """The ATBA (At The Ball Always) routine, allows the ball to drive towards or away from the ball"""
+    """The ATBA (At The Ball Always) routine,
+    allows the ball to drive towards or away from the ball"""
 
     def __init__(self) -> None:
         self.atba_state_machine = ATBAStateMachine()
@@ -64,9 +66,11 @@ class ATBARoutine(
             else:
                 yaws = in_air_yaws
 
-            if self.state_machine.states[agent] == ATBAState.LOCK_OFF_BALL:
+            if self.state_machine.get_state(agent) == ATBAState.LOCK_OFF_BALL:
                 yaws[agent] *= -1
                 pitches[agent] *= -1
+
+                shared_info[TARGET_HEADER][agent]["steer"][:2] *= -1
 
             current_output[agent][:, THROTTLE] = 1
             current_output[agent][:, YAW] = yaws[agent]
@@ -95,6 +99,7 @@ class ATBARoutine(
         _action = top_action["atba"]
         if not isinstance(_action, HCMachineATBAAction):
             raise ValueError(
-                f'Expected {HCMachineATBAAction.__name__} at the "atba" slot but got {type(_action).__name__}'
+                f"Expected {HCMachineATBAAction.__name__} "
+                + f'at the "atba" slot but got {type(_action).__name__}'
             )
         return _action
