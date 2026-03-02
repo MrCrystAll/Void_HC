@@ -44,4 +44,6 @@ But what if it "jumps" while already jumping ? Should i consider this action as 
 
 I finished talking about it here: https://discord.com/channels/348658686962696195/1476251762150346882/1477066491705688124
 
+See [Changelog](CHANGELOG.md)
+
 [Back to top](#flip--dodge-routine)

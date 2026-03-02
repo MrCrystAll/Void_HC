@@ -9,3 +9,7 @@
 | 3.12    	| ![Pylint score](badges/pylint_api_3.12.svg)
 
 TODO.
+
+See [Changelog](CHANGELOG.md)
+
+[Back to top](#luavoid-hc---api)

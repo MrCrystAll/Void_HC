@@ -28,4 +28,6 @@ On reset, i check whether the boost has boost or not, this defines the starting 
 
 If the player has an empty boost tank, triggering the boost action will not update to Boosting, meaning the boost bin will not be activated.
 
+See [Changelog](CHANGELOG.md)
+
 [Back to top](#boost-routines)
