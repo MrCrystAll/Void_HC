@@ -3,6 +3,7 @@
     "./void-hc-api/src",
     "./void-hc-atba/src",
     "./void-hc-flip/src",
-    "./void-hc-boost/src"
+    "./void-hc-boost/src",
+    "./void-hc-common/src",
   ]
 }

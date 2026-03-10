@@ -18,7 +18,7 @@ jobs:
     strategy:
       matrix:
         python-version: ["3.10", "3.11", "3.12"]
-        package: ["api", "atba", "flip", "boost"]
+        package: ["api", "atba", "flip", "boost", "common"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -34,6 +34,7 @@ jobs:
       run: |
         rm -f void-hc-${{ matrix.package }}/badges/pylint_*
 
+        pylint void-hc-${{ matrix.package }} --fail-under 5
         pylint --output-format=text --output=pylint.log void-hc-${{ matrix.package }} --fail-under 5
         PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.log)
         anybadge -l pylint -v $PYLINT_SCORE -f void-hc-${{ matrix.package }}/badges/pylint_${{matrix.package}}_${{matrix.python-version}}.svg 2=red 4=orange 8=yellow 10=green
@@ -65,8 +66,9 @@ jobs:
           mv /tmp/badges/pylint_atba* void-hc-atba/badges/
           mv /tmp/badges/pylint_flip* void-hc-flip/badges/
           mv /tmp/badges/pylint_boost* void-hc-boost/badges/
+          mv /tmp/badges/pylint_common* void-hc-common/badges/
 
-          git add void-hc-api/badges/ void-hc-atba/badges/ void-hc-flip/badges/ void-hc-boost/badges/ 
+          git add void-hc-api/badges/ void-hc-atba/badges/ void-hc-flip/badges/ void-hc-boost/badges/ void-hc-common/badges/ 
           git commit -m "Update badges" || true
           git push
 

@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.1.0] - 27-02-2026
+## [0.1.0] - 10-03-2026
 
-- Moving PIDs implementation to a common package
+- A common package to gather a bunch of utils for different routines instead of copying everything
+

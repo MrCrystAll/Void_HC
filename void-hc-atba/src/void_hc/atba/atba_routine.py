@@ -11,8 +11,10 @@ from void_hc.api.hc_typing import HCAction
 from void_hc.api.target_shared_info_provider import TARGET_HEADER
 from void_hc.atba.atba_primitives import ATBAState, HCMachineATBAAction
 from void_hc.atba.atba_state_machine import ATBAStateMachine
-from void_hc.atba.pids import PitchPID, RollPID, SteerPID
 from void_hc.api.routine import Routine
+from void_hc.common.pid.impl.pitch_to_ball import PitchToBallPID
+from void_hc.common.pid.impl.roll_stabilization import RollStabilizationPID
+from void_hc.common.pid.impl.steer_to_ball import SteerToBallPID
 
 
 class ATBARoutine(
@@ -21,13 +23,23 @@ class ATBARoutine(
     """The ATBA (At The Ball Always) routine,
     allows the ball to drive towards or away from the ball"""
 
-    def __init__(self) -> None:
+    def __init__(
+        self, use_ball_pred: bool = False, ball_pred_step_seconds: float = 1
+    ) -> None:
         self.atba_state_machine = ATBAStateMachine()
 
-        self.steer_towards_ball_pid: SteerPID = SteerPID(3, 0.1, 0.2)
-        self.in_air_steer_towards_ball_pid: SteerPID = SteerPID(0.4, 0.01, 0.1)
-        self.pitch_towards_ball_pid: PitchPID = PitchPID(1, 0, 0.3)
-        self.roll_stabilization_pid: RollPID = RollPID(0.5, 0.1, 0.5)
+        self.steer_towards_ball_pid: SteerToBallPID = SteerToBallPID(
+            3, 0.1, 0.2, use_ball_pred, ball_pred_step_seconds
+        )
+        self.in_air_steer_towards_ball_pid: SteerToBallPID = SteerToBallPID(
+            0.4, 0.01, 0.1, use_ball_pred, ball_pred_step_seconds
+        )
+        self.pitch_towards_ball_pid: PitchToBallPID = PitchToBallPID(
+            1, 0, 0.3, use_ball_pred, ball_pred_step_seconds
+        )
+        self.roll_stabilization_pid: RollStabilizationPID = RollStabilizationPID(
+            0.5, 0.1, 0.5
+        )
 
     @property
     def state_machine(self) -> ATBAStateMachine:

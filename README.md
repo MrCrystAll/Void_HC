@@ -8,6 +8,8 @@ I'm using the name "Lua" but realistically it's just an HC experiment for Void, 
 
 API Documentation: [Documentation](void-hc-api/README.md)
 
+Common Documentation: [Documentation](void-hc-common/README.md)
+
 ## Routines used in this bot
 
 | Routine 	| Quick summary                                  	| Documentation                          	|
