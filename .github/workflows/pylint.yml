@@ -68,7 +68,7 @@ jobs:
           mv /tmp/badges/pylint_boost* void-hc-boost/badges/
           mv /tmp/badges/pylint_common* void-hc-common/badges/
 
-          git add void-hc-api/badges/ void-hc-atba/badges/ void-hc-flip/badges/ void-hc-boost/badges/ void-hc-comon/badges/ 
+          git add void-hc-api/badges/ void-hc-atba/badges/ void-hc-flip/badges/ void-hc-boost/badges/ void-hc-common/badges/ 
           git commit -m "Update badges" || true
           git push
 
