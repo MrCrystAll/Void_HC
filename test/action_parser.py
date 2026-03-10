@@ -26,7 +26,10 @@ class HCBotEnhancedActionParser(
 ):
     def __init__(self, tick_skip: int = 8) -> None:
         self.routine_sequencer = RoutineSequencer(
-            ATBARoutine(), FlipRoutine(), BoostUsageRoutine(), n_actions=tick_skip
+            ATBARoutine(use_ball_pred=True, ball_pred_step_seconds=0.5),
+            FlipRoutine(),
+            BoostUsageRoutine(),
+            n_actions=tick_skip,
         )
         self._lookup_table = self._make_lookup_table()
 

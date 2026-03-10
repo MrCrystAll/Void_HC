@@ -17,6 +17,13 @@ from rlgym.api import RLGym
 
 from action_parser import HCBotEnhancedActionParser
 from void_hc.api.target_shared_info_provider import TargetSharedInfoProvider
+from rlgym_tools.rocket_league.shared_info_providers.multi_provider import MultiProvider
+from rlgym_tools.rocket_league.shared_info_providers.ball_prediction_provider import (
+    BallPredictionProvider,
+)
+from rlgym_tools.rocket_league.state_mutators.random_physics_mutator import (
+    RandomPhysicsMutator,
+)
 
 from void_hc.boost.boost_usage.primitives import BoostUsageAction
 from void_hc.flip.flip_primitives import FlipAction
@@ -33,14 +40,16 @@ if __name__ == "__main__":
         renderer=RocketSimVisRenderer(),
         reward_fn=TouchReward(),
         termination_cond=GoalCondition(),
-        truncation_cond=TimeoutCondition(10),
+        truncation_cond=TimeoutCondition(100),
         transition_engine=RocketSimEngine(),
-        shared_info_provider=TargetSharedInfoProvider(),
+        shared_info_provider=MultiProvider(
+            TargetSharedInfoProvider(), BallPredictionProvider(5, 0.5)
+        ),
     )
 
     running = True
 
-    actions = iter([*([5] * 10 + [1] * 1 + [3])] * 200)
+    actions = iter([*([5] * 10 + [3] * 1 + [1])] * 200)
 
     print(
         act_parser.get_actions_with(
