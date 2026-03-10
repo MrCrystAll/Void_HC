@@ -34,9 +34,8 @@ jobs:
       run: |
         rm -f void-hc-${{ matrix.package }}/badges/pylint_*
 
-        pylint --output-format=text --output=pylint.log void-hc-${{ matrix.package }} --fail-under 5
         pylint void-hc-${{ matrix.package }} --fail-under 5
-        
+
     - uses: actions/upload-artifact@v6
       name: Upload badges
       with:
