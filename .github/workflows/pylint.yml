@@ -36,9 +36,7 @@ jobs:
 
         pylint --output-format=text --output=pylint.log void-hc-${{ matrix.package }} --fail-under 5
         pylint void-hc-${{ matrix.package }} --fail-under 5
-        PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' pylint.log)
-        anybadge -l pylint -v $PYLINT_SCORE -f void-hc-${{ matrix.package }}/badges/pylint_${{matrix.package}}_${{matrix.python-version}}.svg 2=red 4=orange 8=yellow 10=green
-
+        
     - uses: actions/upload-artifact@v6
       name: Upload badges
       with:
